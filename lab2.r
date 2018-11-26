@@ -1,7 +1,7 @@
 library(ggplot2)
 
-path = "F:/Google Drive/USACH/Nivel 8/Analisis de datos/lab2/hepatitis.data"
-#path = "~/Documentos/AnalisisDatosLab1/hepatitis.data"
+#path = "F:/Google Drive/USACH/Nivel 8/Analisis de datos/lab2/hepatitis.data"
+path = "~/Documentos/AnalisisDatosLab2/hepatitis.data"
 hepatitis <- read.table(path,sep=",", na.strings = c("?"))
 
 names <- c("CLASS","AGE","SEX","STEROID","ANTIVIRALS","FATIGUE","MALAISE",
