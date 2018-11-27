@@ -1,4 +1,5 @@
 library(ggplot2)
+library(cluster)
 
 #path = "F:/Google Drive/USACH/Nivel 8/Analisis de datos/lab2/hepatitis.data"
 path = "~/Documentos/AnalisisDatosLab2/hepatitis.data"
@@ -13,8 +14,18 @@ colnames(hepatitis) <- names
 
 hepatitis.without.na <- na.omit(hepatitis)
 
-clusters <- kmeans(hepatitis.without.na, centers = 2, trace = TRUE)
+# clusters <- kmeans(hepatitis.without.na, centers = 5, trace = TRUE)
+# 
+# hepatitis.without.na$CLUSTERS <- as.factor(clusters$cluster)
+# 
+# str(clusters)
 
-hepatitis.without.na$CLUSTERS <- as.factor(clusters$cluster)
+#dismiss.matrix = daisy(hepatitis.without.na)
 
-str(clusters)
+#clusters = pam(dismiss.matrix,4,diss=TRUE)
+clusters = pam(hepatitis.without.na,4,diss=FALSE, metric="euclidean")
+
+
+summary(clusters)
+plot(clusters)
+
