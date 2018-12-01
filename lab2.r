@@ -3,6 +3,8 @@ library(cluster)
 library(factoextra)
 library(fpc)
 library(dplyr)
+library(rgl)
+
 #path = "F:/Google Drive/USACH/Nivel 8/Analisis de datos/lab2/hepatitis.data"
 path = "~/Documentos/AnalisisDatosLab2/hepatitis.data"
 hepatitis <- read.table(path,sep=",", na.strings = c("?"))
@@ -26,14 +28,46 @@ hepatitis.without.na <- na.omit(hepatitis)
 
 data = select(hepatitis.without.na,-CLASS)
 
-#clusters = pam(dismiss.matrix,4,diss=TRUE)
-clusters = pam(data,20,diss=FALSE, metric="euclidean")
-#clusters = pamk(hepatitis.without.na,krange=2:10,criterion="asw",usepam=TRUE,
-#                scaling=FALSE,alpha=0.05,diss=FALSE,critout=FALSE, ns=10, seed=NULL)
+
+data.discretas = select(hepatitis.without.na, -AGE, -BILIRUBIN, -ALK_PHOSPHATE, -SGOT, -ALBUMIN, -PROTIME)
+
+data.continuas = select(hepatitis.without.na, AGE, BILIRUBIN, ALK_PHOSPHATE, SGOT, ALBUMIN, PROTIME)
+
+data.1 = select(hepatitis.without.na, AGE,BILIRUBIN, SGOT,PROTIME)
+
+kmeans.cont = kmeans(data.continuas[,1:3], 3)
+
+plot3d(data.continuas[,1:3], kmeans.cont$cluster)
+
+pc = princomp(data, cor=FALSE, scores= TRUE)
+
+plot(pc,type="lines")
+
+summary(pc)
+
+# fviz_nbclust(data.discretas, pam, method = "wss") +
+#   geom_vline(xintercept = 3, linetype = 2)
+# 
+# clusters = pam(data.discretas,3,diss=FALSE, metric="manhattan")
+# 
+# summary(clusters)
+# 
+# fviz_cluster(clusters, data = NULL, stand = TRUE,
+#              geom = "point", 
+#              ellipse = TRUE, ellypse.type = "convex")
+
+diss.matrix = daisy(data, metric = "euclidean",
+                stand = FALSE)
+
+fviz_nbclust(data, pam, method = "wss") +
+  geom_vline(xintercept = 3, linetype = 2)
+
+clusters = pam(diss.matrix,3,diss=TRUE, metric="euclidean")
+
 summary(clusters)
 
-#clusplot(clusters, clus, main = NULL, stand = FALSE, color = FALSE,
-#         labels = 0)
-fviz_cluster(clusters, data = NULL, stand = TRUE,
-             geom = "point", 
-             ellipse = TRUE, ellypse.type = "convex")
+clusplot(clusters)
+
+#fviz_cluster(clusters, data = NULL, stand = TRUE,
+#             geom = "point", 
+#             ellipse = TRUE, ellypse.type = "convex")
