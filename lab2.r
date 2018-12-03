@@ -56,13 +56,13 @@ summary(pc)
 #              geom = "point", 
 #              ellipse = TRUE, ellypse.type = "convex")
 
-diss.matrix = daisy(data, metric = "euclidean",
-                stand = FALSE)
+# diss.matrix = daisy(data, metric = "euclidean",
+#                stand = FALSE)
 
 fviz_nbclust(data, pam, method = "wss") +
   geom_vline(xintercept = 3, linetype = 2)
 
-clusters = pam(diss.matrix,3,diss=TRUE, metric="euclidean")
+clusters = pam(data,3,diss=FALSE, metric="euclidean")
 
 summary(clusters)
 
