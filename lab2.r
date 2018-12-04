@@ -28,6 +28,8 @@ hepatitis.without.na <- na.omit(hepatitis)
 
 data = select(hepatitis.without.na,-CLASS)
 
+data = scale(data)
+
 
 data.discretas = select(hepatitis.without.na, -AGE, -BILIRUBIN, -ALK_PHOSPHATE, -SGOT, -ALBUMIN, -PROTIME)
 
@@ -56,18 +58,19 @@ summary(pc)
 #              geom = "point", 
 #              ellipse = TRUE, ellypse.type = "convex")
 
-# diss.matrix = daisy(data, metric = "euclidean",
-#                stand = FALSE)
+diss.matrix = daisy(data, metric = "euclidean",
+              stand = FALSE)
 
-fviz_nbclust(data, pam, method = "wss") +
-  geom_vline(xintercept = 3, linetype = 2)
+opt = fviz_nbclust(data, pam, method = "wss") 
 
-clusters = pam(data,3,diss=FALSE, metric="euclidean")
+print(opt)
+
+clusters = pam(diss.matrix,2,diss=TRUE, metric="euclidean")
 
 summary(clusters)
 
 clusplot(clusters)
 
-#fviz_cluster(clusters, data = NULL, stand = TRUE,
-#             geom = "point", 
-#             ellipse = TRUE, ellypse.type = "convex")
+fviz_cluster(clusters, data = NULL, stand = TRUE,
+            geom = "point",
+            ellipse = TRUE, ellypse.type = "convex")
